@@ -1,12 +1,18 @@
 package net.bungie.model;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
 public class User extends AbstractBaseEntity {
   
-  protected String name;
+  private String name;
+  private String telegram_id;
+  private String membership_id;
+  private String nickname;
 
   protected User() {
   }
@@ -16,16 +22,4 @@ public class User extends AbstractBaseEntity {
     this.name = name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public String getName() {
-    return this.name;
-  }
-
-  @Override
-  public String toString() {
-    return super.toString() + '(' + name + ')';
-  }
 }

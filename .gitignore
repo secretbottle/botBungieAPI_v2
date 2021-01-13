@@ -1,6 +1,11 @@
 .idea
 out
+*.properties
 *.iml
 log
 
+
 /lib/
+/test/
+/log/
+/web/
