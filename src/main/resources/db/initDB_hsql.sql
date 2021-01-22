@@ -1,5 +1,5 @@
-DROP TABLE users IF EXISTS;
 DROP TABLE user_platforms IF EXISTS;
+DROP TABLE users IF EXISTS;
 DROP SEQUENCE global_seq IF EXISTS;
 
 CREATE SEQUENCE GLOBAL_SEQ AS INTEGER START WITH 100000;
@@ -10,7 +10,6 @@ CREATE TABLE users
     telegram_id     VARCHAR(255)                 NOT NULL,
     membership_id   VARCHAR(255)                 NOT NULL,
     nickname        VARCHAR(255)            NOT NULL,
-    mebmership_type INTEGER                 NOT NULL,
     registered      TIMESTAMP DEFAULT now() NOT NULL
 );
 CREATE UNIQUE INDEX user_telegram_id ON users (telegram_id);
