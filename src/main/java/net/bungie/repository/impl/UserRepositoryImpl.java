@@ -1,18 +1,18 @@
 package net.bungie.repository.impl;
 
-import java.util.ArrayList;
 import lombok.AllArgsConstructor;
 import net.bungie.model.User;
 import net.bungie.repository.CrudUserRepository;
 import net.bungie.repository.UserRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 @AllArgsConstructor
-public class ImplUserRepository implements UserRepository {
+public class UserRepositoryImpl implements UserRepository {
 
   private final CrudUserRepository userRepository;
 
