@@ -3,23 +3,22 @@ package net.bungie.telegram.commands;
 import lombok.Getter;
 import lombok.ToString;
 
+@Getter
 @ToString
-public abstract class AbstractBotCommandWIthArgument {
-    private static final String COMMAND_INIT_CHARACTER = "/";
-    private static final int COMMAND_MAX_LENGTH = 32;
+public abstract class AbstractBotCommand {
 
-    @Getter
     private final String commandIdentifier;
-    @Getter
     private final String description;
-    @Getter
     private final int numberArgs;
 
-    public AbstractBotCommandWIthArgument(String commandIdentifier, String description) {
+    public AbstractBotCommand(String commandIdentifier, String description) {
         this(commandIdentifier, description, 2);
     }
 
-    public AbstractBotCommandWIthArgument(String commandIdentifier, String description, int numberArgs) {
+    public AbstractBotCommand(String commandIdentifier, String description, int numberArgs) {
+        String COMMAND_INIT_CHARACTER = "/";
+        int COMMAND_MAX_LENGTH = 32;
+
         if (commandIdentifier == null || commandIdentifier.isEmpty()) {
             throw new IllegalArgumentException("commandId for command cannot be null or empty");
         }
@@ -37,5 +36,4 @@ public abstract class AbstractBotCommandWIthArgument {
         this.numberArgs = numberArgs;
     }
 
-    abstract public void execute(String[] arguments);
 }

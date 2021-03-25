@@ -6,15 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @NoArgsConstructor
-public class CommandRegister {
-    private final Map<String, AbstractBotCommandWIthArgument> commandsMap = new HashMap<>();
+public class CommandRegister<T extends AbstractBotCommand> {
+    private final Map<String, T> commandsMap = new HashMap<>();
 
-    public final AbstractBotCommandWIthArgument register(AbstractBotCommandWIthArgument command) {
+    public final T register(T command) {
         return commandsMap.putIfAbsent(command.getCommandIdentifier(), command);
     }
 
-    public final AbstractBotCommandWIthArgument deregister(String commandName) {
+    public final T deregister(String commandName) {
         return commandsMap.remove(commandName);
+    }
+
+    public final T getCommand(String commandName) {
+        return commandsMap.get(commandLowerCaseWithoutSlash(commandName));
     }
 
     public final void deregisterAll() {
@@ -22,6 +26,14 @@ public class CommandRegister {
     }
 
     public final boolean isRegister(String commandName) {
-        return commandsMap.containsKey(commandName);
+        return commandsMap.containsKey(commandLowerCaseWithoutSlash(commandName));
+    }
+
+    private String commandLowerCaseWithoutSlash(String commandName) {
+        commandName = commandName.toLowerCase();
+        if (commandName.startsWith("/")) {
+            return commandName.substring(1);
+        }
+        return commandName;
     }
 }
