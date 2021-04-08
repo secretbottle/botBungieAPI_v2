@@ -1,5 +1,6 @@
 package net.bungie.config;
 
+import net.bungie.telegram.Bot;
 import org.hibernate.cfg.AvailableSettings;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -8,19 +9,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import javax.persistence.EntityManagerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-@EnableJpaRepositories
 @Configuration
-@ComponentScan(basePackages = {"net.bungie.repository.impl"})
+@ComponentScan
+@EnableJpaRepositories("net.bungie.repository")
 @PropertySource("classpath:db/hsqldb.properties")
 @PropertySource("classpath:telegramBotAPI-Key.properties")
+@PropertySource("classpath:bungieAPI-Key.properties")
 public class ApplicationConfig {
     @Value("${database.url}")
     private String url;
@@ -28,6 +28,12 @@ public class ApplicationConfig {
     private String username;
     @Value("${database.password}")
     private String password;
+
+
+    @Bean
+    public Bot bot(){
+        return new Bot();
+    }
 
     @Bean
     public DriverManagerDataSource dataSource(){
@@ -58,10 +64,4 @@ public class ApplicationConfig {
         return entityManager;
     }
 
-    @Bean
-    public JpaTransactionManager transactionManager(){
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-        transactionManager.setEntityManagerFactory((EntityManagerFactory) entityManagerFactory());
-        return transactionManager;
-    }
 }

@@ -2,10 +2,12 @@ package net.bungie.telegram;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.bungie.telegram.commands.*;
+import net.bungie.telegram.commands.BotCommandNoArgument;
+import net.bungie.telegram.commands.BotCommandWithArgument;
+import net.bungie.telegram.commands.CommandRegister;
 import net.bungie.telegram.commands.impl.Register;
 import net.bungie.telegram.commands.impl.Xur;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -13,19 +15,20 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Slf4j
-@Component
-@Getter
 public class Bot extends TelegramLongPollingBot {
     private final CommandRegister<BotCommandWithArgument> commandRegisterWithArg = new CommandRegister<>();
     private final CommandRegister<BotCommandNoArgument> commandRegisterNoArg = new CommandRegister<>();
 
-    private final String botUsername;
-    private final String botToken;
+    @Getter
+    @Value("${api.name}")
+    private String botUsername;
 
-    public Bot(String botUsername, String botToken) {
+    @Getter
+    @Value("${api.token}")
+    private String botToken;
+
+    public Bot() {
         super();
-        this.botUsername = botUsername;
-        this.botToken = botToken;
 
         commandRegisterWithArg.register(new Register("/register", "Command register player character"));
 
@@ -38,31 +41,27 @@ public class Bot extends TelegramLongPollingBot {
             Message message = update.getMessage();
             if (message.isCommand()) {
                 String[] commands = message.getText().split("\\s+");
-                String command = commands[0];
-                //TODO work here
+                String command = commands[0].substring(1).toLowerCase();
                 String answer = switch (command) {
                     case "xur" -> commandRegisterNoArg.getCommand(command).execute();
                     case "register" -> commandRegisterWithArg.getCommand(command).execute(commands[1]);
-                    default -> "Команда  не найдена";
+                    default -> "Команда не найдена";
                 };
-
                 sendAnswer(message, answer);
-
             }
         }
     }
 
     private void sendAnswer(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
-        sendMessage.enableMarkdown(true);
+        //sendMessage.enableMarkdown(true);
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.error("Error while send anwswer: ", e);
+            log.error("Error while sending answer from Bot to User: ", e);
         }
     }
-
 }
